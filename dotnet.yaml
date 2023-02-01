@@ -1,0 +1,96 @@
+---
+- name: installing dotnet 7
+  hosts: all
+  become: yes
+  tasks:
+  - name: downloading the microsoft debian packages
+    get_url:
+      url: https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb
+      dest: /tmp/packages-microsoft-prod.deb
+    
+  - name: installing debian package
+    apt:
+      deb: /tmp/packages-microsoft-prod.deb
+    
+  - name: installing donet 7
+    apt:
+      update_cache: true
+      name: dotnet-sdk-7.0
+      state: present
+_______________________________________________________________________
+---
+- name: installing dotnet 6
+  hosts: all
+  become: yes
+  tasks:
+  - name: installing donet 6
+    apt:
+      update_cache: true
+      name: dotnet-sdk-6.0
+      state: present
+_______________________________________________________________________
+
+variables:
+
+---
+- name: installing dotnet 
+  hosts: all
+  become: yes
+  vars:
+    version: "dotnet-sdk-{{ v }}"
+  tasks:
+  - name: downloading the microsoft debian packages
+    get_url:
+      url: https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb
+      dest: /tmp/packages-microsoft-prod.deb
+    
+  - name: installing debian package
+    apt:
+      deb: /tmp/packages-microsoft-prod.deb
+    
+  - name: installing donet 
+    apt:
+      update_cache: true
+      name: "{{ version }}"
+      state: present
+
+________________________________________________________________________
+ 
+ playbook for nodejs:
+
+ ---
+- name: installing nodejs
+  hosts: all
+  become: yes
+  tasks: 
+    - name: updating the packages
+      apt:
+        update_cache: true
+        state: present
+    - name: installing the node js
+      apt:
+        name: nodejs
+        state: present
+    - name: installing npm
+      apt:
+        name: npm
+        state: present
+________________________________________________________________________
+
+playbook for installing java:
+
+---
+- name: installing java
+  hosts: all
+  become: yes
+  vars:
+    java_version: "openjdk-{{ v }}-jdk"
+  tasks: 
+    - name: updating the packages
+      apt:
+        update_cache: true
+        state: present
+    - name: installing the java
+      apt:
+        name: "{{ java_version }}"
+        state: present
